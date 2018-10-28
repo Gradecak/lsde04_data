@@ -86,7 +86,7 @@
 
        $.getJSON("https://gradecak.github.io/lsde04_data/png/tiles.json", function(json){
          console.log(json)
-         var files = json.files
+         var files = json.test
          files.forEach(function(file){
            var filename = file.slice(0,-4);
            var fn_split = filename.split("_");
