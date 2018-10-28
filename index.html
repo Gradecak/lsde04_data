@@ -83,7 +83,7 @@
 
 
        // DEM raster overlay
-
+/*
        $.getJSON("https://gradecak.github.io/lsde04_data/png/tiles.json", function(json){
          console.log(json)
          var files = json.files
@@ -120,7 +120,7 @@
          console.log(jqxhr);
        });
 
-
+*/
        // Dike Segments overlay
        map.addSource('dike-json', {
          type: 'geojson',
@@ -141,7 +141,7 @@
        // Flood plains
        map.addSource('flood-plain-5', {
          type: 'geojson',
-         data: "https://gradecak.github.io/lsde04_data/flood_plains/flood_plain_5P.GeoJSON"
+         data: "https://gradecak.github.io/lsde04_data/flood_plains/flood_plain_2.5P.GeoJSON"
        });
 
        map.addLayer({
@@ -149,8 +149,8 @@
          'type': 'fill',
          'source': 'flood-plain-5',
          'paint': {
-           'fill-color': '#ff4d27',
-           'fill-opacity': 0.85
+           'fill-color': '#000000',
+           'fill-opacity': 0.7
          }
        })
 
