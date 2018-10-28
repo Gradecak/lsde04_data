@@ -88,46 +88,46 @@
 
 
        // DEM raster overlay
-       /*
-          $.getJSON("https://gradecak.github.io/lsde04_data/png/tiles.json", function(json){
-          console.log(json)
-          var files = json.files
-          files.forEach(function(file){
-          var filename = file.slice(0,-4);
-          var fn_split = filename.split("_");
-          console.log(fn_split)
-          var coors = [
-          [Number(fn_split[4]), Number(fn_split[7])], // LU
-          [Number(fn_split[6]), Number(fn_split[7])], // RU
-          [Number(fn_split[6]), Number(fn_split[5])], // RB
-          [Number(fn_split[4]), Number(fn_split[5])], // LB
-          ];
 
-          map.addLayer({
-          "id": "overlay-layer-" + fn_split[1] + "-" + fn_split[2],
-          "source": {
-          type: "image",
-          url: "https://gradecak.github.io/lsde04_data/png/"+file,
-          coordinates: [
-          proj4('EPSG:28992','EPSG:4326',coors[0]), // LU
-          proj4('EPSG:28992','EPSG:4326',coors[1]), // RU
-          proj4('EPSG:28992','EPSG:4326',coors[2]), // RB
-          proj4('EPSG:28992','EPSG:4326',coors[3]), // LB
-          ]
-          },
-          "type": "raster",
-          "paint": {"raster-opacity": 0.65 }
-          }, 'landcover_snow');
+       $.getJSON("https://gradecak.github.io/lsde04_data/png/tiles.json", function(json){
+         console.log(json)
+         var files = json.files
+         files.forEach(function(file){
+           var filename = file.slice(0,-4);
+           var fn_split = filename.split("_");
+           fn_split[7] = fn_split[7].split("-")[0];
+           var coors = [
+             [Number(fn_split[4]), Number(fn_split[7])], // LU
+             [Number(fn_split[6]), Number(fn_split[7])], // RU
+             [Number(fn_split[6]), Number(fn_split[5])], // RB
+             [Number(fn_split[4]), Number(fn_split[5])], // LB
+           ];
 
-          })
-          });
-        */
+           map.addLayer({
+             "id": "overlay-layer-" + fn_split[1] + "-" + fn_split[2],
+             "source": {
+               type: "image",
+               url: "https://gradecak.github.io/lsde04_data/png/"+file,
+               coordinates: [
+                 proj4('EPSG:28992','EPSG:4326',coors[0]), // LU
+                 proj4('EPSG:28992','EPSG:4326',coors[1]), // RU
+                 proj4('EPSG:28992','EPSG:4326',coors[2]), // RB
+                 proj4('EPSG:28992','EPSG:4326',coors[3]), // LB
+               ]
+             },
+             "type": "raster",
+             "paint": {"raster-opacity": 0.65 }
+           }, 'landcover_snow');
+
+         })
+       });
+
+
+       // Dike Segments overlay
        map.addSource('dike-json', {
          type: 'geojson',
          data: "https://gradecak.github.io/lsde04_data/all_dikes_processed.GeoJSON"
        });
-
-
 
        map.addLayer({
          'id': 'dikes',
@@ -138,39 +138,6 @@
            'fill-opacity': 0.85
          }
        })
-       // Dike Segments overlay
-
-       /*
-          $.getJSON("https://raw.githubusercontent.com/gradecak/lsde04_data/master/all_dikes_connected.GeoJSON", function(json) {
-          json.features.forEach(function(featuresPart, featuresIndex, featuresArray) {
-          var newArr = [];
-          featuresArray[featuresIndex].geometry.coordinates[0].forEach(function(part, index, theArray) {
-          if (index % 20 === 0) {
-          newArr.push(proj4('EPSG:28992','EPSG:4326',theArray[index]));
-          }
-          });
-          featuresArray[featuresIndex].geometry.coordinates[0] = newArr;
-
-          map.addLayer({
-          'id': 'dike-'+ featuresIndex,
-          'type': 'fill',
-          'source': {
-          'type': 'geojson',
-          'data': featuresArray[featuresIndex]
-          },
-          'paint': {
-          'fill-color': '#ff4d27',
-          'fill-opacity': 0.85
-          }
-          });
-
-
-
-          });
-          });
-        */
-
-
      });
     </script>
 
