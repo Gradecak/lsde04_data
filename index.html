@@ -136,24 +136,38 @@
          }
        })
 
+       var plains = [ '-50', '0.5', '2.5', '3.5', '4.5', '4', '5' ];
+       var plain_ids = []
+       for(var i =0; i< plains.length; i++){
+
+         var plain = 'pflood_plain_' + plains[i];
+         plain_ids.push(plain);
+
+         map.addSource('plain', {
+           type: 'geojson',
+           data: "https://gradecak.github.io/lsde04_data/flood_plains/" + plain + ".GeoJSON"
+         });
+
+         map.addLayer({
+           'id': plain,
+           'type': 'fill',
+           'source': 'flood-plain-5',
+           'layout': {
+             'visibility': 'visible'
+           },
+           'paint': {
+             'fill-color': '#000000',
+             'fill-opacity': 0.7
+           }
+         })
+       }
+
 
        // Flood plains
-       map.addSource('flood-plain-5', {
-         type: 'geojson',
-         data: "https://gradecak.github.io/lsde04_data/flood_plains/flood_plain_2.5P.GeoJSON"
-       });
 
-       map.addLayer({
-         'id': 'flood-plain-5',
-         'type': 'fill',
-         'source': 'flood-plain-5',
-         'paint': {
-           'fill-color': '#000000',
-           'fill-opacity': 0.7
-         }
-       })
 
-       var toggleableLayerIds = [ 'dikes','flood-plain-5'];
+       var toggleableLayerIds = [ 'dikes',];
+       toggleableLayerIds = toggleableLayerIds.concat(plain_ids)
 
        for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
