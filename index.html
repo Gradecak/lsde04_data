@@ -136,14 +136,13 @@
          }
        })
 
-       var plains = [ '-50', '0.5', '2.5', '3.5', '4.5', '4', '5' ];
+       var plains = [ '0.5', '1', '1.5', '2', '2.5', '3' ];
        var plain_ids = []
        for(var i =0; i< plains.length; i++){
 
          var plain = 'pflood_plain_' + plains[i];
          plain_ids.push(plain);
-
-         map.addSource('plain', {
+         map.addSource(plain, {
            type: 'geojson',
            data: "https://gradecak.github.io/lsde04_data/flood_plains/" + plain + ".GeoJSON"
          });
@@ -151,7 +150,7 @@
          map.addLayer({
            'id': plain,
            'type': 'fill',
-           'source': 'flood-plain-5',
+           'source': plain,
            'layout': {
              'visibility': 'visible'
            },
