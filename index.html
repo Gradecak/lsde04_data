@@ -38,7 +38,8 @@
          files.forEach(function(file){
            var filename = file.slice(0,-4);
            var fn_split = filename.split("_");
-           fn_split[7] = fn_split[7].split("-")[0];
+           /* fn_split[7] = fn_split[7].split("-")[0]; */
+           console.log(fn_split)
            var coors = [
              [Number(fn_split[4]), Number(fn_split[7])], // LU
              [Number(fn_split[6]), Number(fn_split[7])], // RU
