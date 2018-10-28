@@ -15,7 +15,58 @@
   </head>
   <body>
 
+    <style>
+     .filter-group {
+       font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+       font-weight: 600;
+       position: absolute;
+       top: 10px;
+       right: 10px;
+       z-index: 1;
+       border-radius: 3px;
+       width: 120px;
+       color: #fff;
+     }
+
+     .filter-group input[type=checkbox]:first-child + label {
+       border-radius: 3px 3px 0 0;
+     }
+
+     .filter-group label:last-child {
+       border-radius: 0 0 3px 3px;
+       border: none;
+     }
+
+     .filter-group input[type=checkbox] {
+       display: none;
+     }
+
+     .filter-group input[type=checkbox] + label {
+       background-color: #3386c0;
+       display: block;
+       cursor: pointer;
+       padding: 10px;
+       border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+     }
+
+     .filter-group input[type=checkbox] + label {
+       background-color: #3386c0;
+       text-transform: capitalize;
+     }
+
+     .filter-group input[type=checkbox] + label:hover,
+     .filter-group input[type=checkbox]:checked + label {
+       background-color: #4ea0da;
+     }
+
+     .filter-group input[type=checkbox]:checked + label:before {
+       content: '✔';
+       margin-right: 5px;
+     }
+    </style>
+
     <div id='map'></div>
+    <nav id='filter-group' class='filter-group'></nav>
     <script>
      proj4.defs("EPSG:28992","+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs");
      proj4.defs("EPSG:4326","+proj=longlat +datum=WGS84 +no_defs");
@@ -24,21 +75,20 @@
      var map = new mapboxgl.Map({
        container: 'map',
        style: 'mapbox://styles/mapbox/streets-v9?optimize=true',
-       center: [4.161917661708293,51.30563120624621],
-       zoom: 10
+       center: [5.291266, 52.132633],
+       zoom: 7
      });
 
-     var base_url = "https://raw.githubusercontent.com/gradecak/lsde04_data/master/"
      map.on('load', function () {
 
 
+       // DEM raster overlay
        $.getJSON("https://gradecak.github.io/lsde04_data/png/tiles.json", function(json){
          console.log(json)
          var files = json.files
          files.forEach(function(file){
            var filename = file.slice(0,-4);
            var fn_split = filename.split("_");
-           /* fn_split[7] = fn_split[7].split("-")[0]; */
            console.log(fn_split)
            var coors = [
              [Number(fn_split[4]), Number(fn_split[7])], // LU
@@ -66,6 +116,7 @@
          })
        });
 
+       // Dike Segments overlay
        $.getJSON("https://raw.githubusercontent.com/gradecak/lsde04_data/master/all_dikes_connected.GeoJSON", function(json) {
          json.features.forEach(function(featuresPart, featuresIndex, featuresArray) {
            var newArr = [];
