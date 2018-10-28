@@ -123,7 +123,7 @@
        // Dike Segments overlay
        map.addSource('dike-json', {
          type: 'geojson',
-         data: "https://gradecak.github.io/lsde04_data/all_dikes_processed.GeoJSON"
+         data: "https://gradecak.github.io/lsde04_data/dikes.GeoJSON"
        });
 
        map.addLayer({
@@ -135,6 +135,17 @@
            'fill-opacity': 0.85
          }
        })
+
+
+       // Flood plains
+       var plainConfigs = [
+         {'fill': "#800AEB"},
+         {fill: "#7210E6"},
+         {fill: "#6416E1"},
+         {fill: "#6416E1"},
+         {fill: "#4722D7"},
+         {fill: "#3928D2"}
+       ]
 
        var plains = [ '0.5', '1', '1.5', '2', '2.5', '3' ];
        var plain_ids = []
@@ -152,32 +163,44 @@
            'type': 'fill',
            'source': plain,
            'layout': {
-             'visibility': 'visible'
+             'visibility': 'none'
            },
            'paint': {
-             'fill-color': '#000000',
-             'fill-opacity': 0.7
+             'fill-color': plainConfigs[i].fill,
+             'fill-opacity': 0.8
            }
          })
        }
 
 
-       // Flood plains
-
 
        var toggleableLayerIds = [ 'dikes',];
        toggleableLayerIds = toggleableLayerIds.concat(plain_ids)
 
+
+       var buttonNames = {
+         'dikes': "Show Dikes",
+         'pflood_plain_0.5': "Flood Plain 0.5 Meters",
+         'pflood_plain_1': "Flood Plain 1 Meter",
+         'pflood_plain_1.5': "Flood Plain 1.5 Meters",
+         'pflood_plain_2': "Flood Plain 2 Meters",
+         'pflood_plain_2.5': "Flood Plain 2.5 Meters",
+         'pflood_plain_3': "Flood Plain 0.5 Meters",
+       }
        for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
 
          var link = document.createElement('a');
          link.href = '#';
-         link.className = 'active';
-         link.textContent = id;
+         var active = map.getLayoutProperty(id, 'visibility');
+         if(active == 'visible'){
+           link.className = 'active';
+         }
+         link.textContent = buttonNames[id];
+         link.id = id;
 
          link.onclick = function (e) {
-           var clickedLayer = this.textContent;
+           var clickedLayer = this.id;
            e.preventDefault();
            e.stopPropagation();
 
