@@ -104,10 +104,10 @@
                type: "image",
                url: "https://gradecak.github.io/lsde04_data/png/"+file,
                coordinates: [
-                 proj4('EPSG:28992','EPSG:4326',coors[0]), // LU
-                 proj4('EPSG:28992','EPSG:4326',coors[1]), // RU
-                 proj4('EPSG:28992','EPSG:4326',coors[2]), // RB
-                 proj4('EPSG:28992','EPSG:4326',coors[3]), // LB
+                 proj4('EPSG:28992','EPSG:4326',coors[0]), // LU (minx)
+                 proj4('EPSG:28992','EPSG:4326',coors[1]), // RU (miny)
+                 proj4('EPSG:28992','EPSG:4326',coors[2]), // RB (maxx)
+                 proj4('EPSG:28992','EPSG:4326',coors[3]), // LB (maxy)
                ]
              },
              "type": "raster",
