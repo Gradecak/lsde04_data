@@ -88,8 +88,8 @@
        container: 'map',
        style: 'mapbox://styles/gradecam/cjnu44fv84g9o2rqklj6mdiik',
        center: [5.291266, 52.132633],
-       pitch: 60, // pitch in degrees
-       zoom: 8
+       /* pitch: 40, // pitch in degrees */
+       zoom: 7
      });
 
 
@@ -101,7 +101,9 @@
 
        //                minx   miny     maxx    maxy
        /* var tile_cors = [12400, 306700, 277500, 615450] */
-       var tile_cors = [12400, 304750,276550,615500]
+       /* var tile_cors = [12400, 304750,276550,615500] */
+       /* var tile_cors = [12400,306700,278500,615450] */
+       var tile_cors = [9000, 303500, 276000, 620500]
        var coors = [
          [Number(tile_cors[0]), Number(tile_cors[3])], // LU
          [Number(tile_cors[2]), Number(tile_cors[3])], // RU
@@ -113,7 +115,7 @@
          "id": "dem-layer",
          "source": {
            type: "image",
-           url: "https://gradecak.github.io/lsde04_data/overall_dem_13400_306700_278500_615450.png",
+           url: "https://gradecak.github.io/lsde04_data/overall_higher_res4_dem_1000_30500_28000_28000.png",
            coordinates: [
              proj4('EPSG:28992','EPSG:4326',coors[0]), // LU (minx)
              proj4('EPSG:28992','EPSG:4326',coors[1]), // RU (miny)
@@ -123,7 +125,8 @@
          },
          "type": "raster",
          "paint": {"raster-opacity": 0.85 }
-       }, 'contour-line');
+       } );
+       //'contour-line'
 
        // Flood plains
        var plainConfigs = [
