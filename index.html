@@ -39,6 +39,7 @@
        font-family: 'Open Sans', sans-serif;
      }
 
+
      #menu a {
        font-size: 13px;
        color: #404040;
@@ -79,7 +80,7 @@
 
     <script>
      /* style: 'mapbox://styles/mapbox/streets-v9?optimize=true' */
-       proj4.defs("EPSG:28992","+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs");
+     proj4.defs("EPSG:28992","+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs");
      proj4.defs("EPSG:4326","+proj=longlat +datum=WGS84 +no_defs");
 
      mapboxgl.accessToken = 'pk.eyJ1IjoiY2FicmVubiIsImEiOiJjam5iMDFhbGw1YmlsM3BvODNuM2NqemFxIn0.LKFZPukxR3zFIMvnSfy0UQ';
@@ -94,8 +95,9 @@
 
      map.on('load', function () {
 
-
-       var tile_cors = [12400, 308600, 277500, 612450]
+       //                minx   miny     maxx    maxy
+       //var tile_cors = [12400, 306700, 277500, 615450]
+       var tile_cors = [13400, 306700, 278500, 615450]
        var coors = [
          [Number(tile_cors[0]), Number(tile_cors[3])], // LU
          [Number(tile_cors[2]), Number(tile_cors[3])], // RU
