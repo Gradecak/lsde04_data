@@ -88,7 +88,7 @@
        container: 'map',
        style: 'mapbox://styles/gradecam/cjnu44fv84g9o2rqklj6mdiik',
        center: [5.291266, 52.132633],
-       /* pitch: 40, // pitch in degrees */
+       pitch: 40, // pitch in degrees
        zoom: 7
      });
 
@@ -118,10 +118,14 @@
            type: "image",
            url: "https://gradecak.github.io/lsde04_data/overall_higher_res4_dem_1000_30500_28000_28000.png",
            coordinates: [
-             proj4('EPSG:28992','EPSG:4326',coors[0]), // LU (minx)
-             proj4('EPSG:28992','EPSG:4326',coors[1]), // RU (miny)
-             proj4('EPSG:28992','EPSG:4326',coors[2]), // RB (maxx)
-             proj4('EPSG:28992','EPSG:4326',coors[3]), // LB (maxy)
+             [3.27942, 53.57131],
+             [7.2073, 53.57131],
+             [7.2073, 50.68950],
+             [3.27942, 50.68950],
+             /* proj4('EPSG:28992','EPSG:4326',coors[0]), // LU (minx) */
+             /* proj4('EPSG:28992','EPSG:4326',coors[1]), // RU (miny) */
+             /* proj4('EPSG:28992','EPSG:4326',coors[2]), // RB (maxx) */
+             /* proj4('EPSG:28992','EPSG:4326',coors[3]), // LB (maxy) */
            ]
          },
          "type": "raster",
@@ -183,10 +187,6 @@
        })
 
 
-
-
-
-
        var toggleableLayerIds = [ 'dikes', 'dem-layer'];
        toggleableLayerIds = toggleableLayerIds.concat(plain_ids)
 
@@ -199,7 +199,7 @@
          'pflood_plain_1.5': "Flood Plain 1.5 Meters",
          'pflood_plain_2': "Flood Plain 2 Meters",
          'pflood_plain_2.5': "Flood Plain 2.5 Meters",
-         'pflood_plain_3': "Flood Plain 0.5 Meters",
+         'pflood_plain_3': "Flood Plain 3 Meters",
        }
        for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
