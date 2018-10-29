@@ -16,6 +16,17 @@
   <body>
 
     <style>
+     #legend{
+       background-image: url("https://gradecak.github.io/lsde04_data/colorbar.png");
+       background-size: contain;
+       background-repeat: no-repeat;
+       position: absolute;
+       z-index: 2;
+       top: 10px;
+       left: 10px;
+       width: 15vw;
+       height: 80vh;
+     }
      #menu {
        background: #fff;
        position: absolute;
@@ -61,18 +72,20 @@
 
     <nav id="menu"></nav>
     <div id='map'></div>
+    <div id="legend"></div>
 
 
     </div>
 
     <script>
-     proj4.defs("EPSG:28992","+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs");
+     /* style: 'mapbox://styles/mapbox/streets-v9?optimize=true' */
+       proj4.defs("EPSG:28992","+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs");
      proj4.defs("EPSG:4326","+proj=longlat +datum=WGS84 +no_defs");
 
      mapboxgl.accessToken = 'pk.eyJ1IjoiY2FicmVubiIsImEiOiJjam5iMDFhbGw1YmlsM3BvODNuM2NqemFxIn0.LKFZPukxR3zFIMvnSfy0UQ';
      var map = new mapboxgl.Map({
        container: 'map',
-       style: 'mapbox://styles/mapbox/streets-v9?optimize=true',
+       style: 'mapbox://styles/gradecam/cjnu44fv84g9o2rqklj6mdiik',
        center: [5.291266, 52.132633],
        zoom: 7
      });
@@ -82,64 +95,33 @@
      map.on('load', function () {
 
 
-       // DEM raster overlay
-
-       $.getJSON("https://gradecak.github.io/lsde04_data/png/tiles.json", function(json){
-         console.log(json)
-         var files = json.test
-         files.forEach(function(file){
-           var filename = file.slice(0,-4);
-           var fn_split = filename.split("_");
-           fn_split[7] = fn_split[7].split("-")[0];
-           var coors = [
-             [Number(fn_split[4]), Number(fn_split[7])], // LU
-             [Number(fn_split[6]), Number(fn_split[7])], // RU
-             [Number(fn_split[6]), Number(fn_split[5])], // RB
-             [Number(fn_split[4]), Number(fn_split[5])], // LB
-           ];
-
-           map.addLayer({
-             "id": "overlay-layer-" + fn_split[1] + "-" + fn_split[2],
-             "source": {
-               type: "image",
-               url: "https://gradecak.github.io/lsde04_data/png/"+file,
-               coordinates: [
-                 proj4('EPSG:28992','EPSG:4326',coors[0]), // LU (minx)
-                 proj4('EPSG:28992','EPSG:4326',coors[1]), // RU (miny)
-                 proj4('EPSG:28992','EPSG:4326',coors[2]), // RB (maxx)
-                 proj4('EPSG:28992','EPSG:4326',coors[3]), // LB (maxy)
-               ]
-             },
-             "type": "raster",
-             "paint": {"raster-opacity": 0.65 }
-           }, 'landcover_snow');
-
-         })
-       }).fail(function( jqxhr, textStatus, error ) {
-         var err = textStatus + ", " + error;
-         console.log(jqxhr);
-       });
-
-       // Dike Segments overlay
-       map.addSource('dike-json', {
-         type: 'geojson',
-         data: "https://gradecak.github.io/lsde04_data/dikes.GeoJSON"
-       });
+       var tile_cors = [12400, 308600, 277500, 612450]
+       var coors = [
+         [Number(tile_cors[0]), Number(tile_cors[3])], // LU
+         [Number(tile_cors[2]), Number(tile_cors[3])], // RU
+         [Number(tile_cors[2]), Number(tile_cors[1])], // RB
+         [Number(tile_cors[0]), Number(tile_cors[1])], // LB
+       ];
 
        map.addLayer({
-         'id': 'dikes',
-         'type': 'fill',
-         'source': 'dike-json',
-         'paint': {
-           'fill-color': '#ff0000',
-           'fill-opacity': 0.85
-         }
-       })
-
+         "id": "dem-layer",
+         "source": {
+           type: "image",
+           url: "https://gradecak.github.io/lsde04_data/overall_dem_13400_306700_278500_615450.png",
+           coordinates: [
+             proj4('EPSG:28992','EPSG:4326',coors[0]), // LU (minx)
+             proj4('EPSG:28992','EPSG:4326',coors[1]), // RU (miny)
+             proj4('EPSG:28992','EPSG:4326',coors[2]), // RB (maxx)
+             proj4('EPSG:28992','EPSG:4326',coors[3]), // LB (maxy)
+           ]
+         },
+         "type": "raster",
+         "paint": {"raster-opacity": 0.85 }
+       }, 'contour-line');
 
        // Flood plains
        var plainConfigs = [
-         {'fill': "#800AEB"},
+         {fill: "#800AEB"},
          {fill: "#7210E6"},
          {fill: "#6416E1"},
          {fill: "#6416E1"},
@@ -172,14 +154,34 @@
          })
        }
 
+       // Dike Segments overlay
+       map.addSource('dike-json', {
+         type: 'geojson',
+         data: "https://gradecak.github.io/lsde04_data/dikes.GeoJSON"
+       });
+
+       map.addLayer({
+         'id': 'dikes',
+         'type': 'fill',
+         'source': 'dike-json',
+         'paint': {
+           'fill-color': '#ff0000',
+           'fill-opacity': 0.85
+         }
+       })
 
 
-       var toggleableLayerIds = [ 'dikes',];
+
+
+
+
+       var toggleableLayerIds = [ 'dikes', 'dem-layer'];
        toggleableLayerIds = toggleableLayerIds.concat(plain_ids)
 
 
        var buttonNames = {
          'dikes': "Show Dikes",
+         'dem-layer': "Toggle DEM",
          'pflood_plain_0.5': "Flood Plain 0.5 Meters",
          'pflood_plain_1': "Flood Plain 1 Meter",
          'pflood_plain_1.5': "Flood Plain 1.5 Meters",
