@@ -16,6 +16,16 @@
   <body>
 
     <style>
+
+     /* // From: Pitch toggle control for Mapbox GL JS — http://fuzzytolerance.info/blog/2017/01/30/Pitch-toggle-control-for-Mapbox-GL-JS/ */
+     .mapboxgl-ctrl-pitchtoggle-3d {
+       background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+ICAgIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHN0eWxlPSJmb250LXNpemU6IDE0cHg7IGZvbnQtZmFtaWx5OiAnSGVsdmV0aWNhIE5ldWUnLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXdlaWdodDogYm9sZDsgdGV4dC1hbmNob3I6IG1pZGRsZTsiPjNEPC90ZXh0Pjwvc3ZnPg==);
+     }
+
+     .mapboxgl-ctrl-pitchtoggle-2d {
+       background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+ICAgIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHN0eWxlPSJmb250LXNpemU6IDE0cHg7IGZvbnQtZmFtaWx5OiAnSGVsdmV0aWNhIE5ldWUnLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXdlaWdodDogYm9sZDsgdGV4dC1hbmNob3I6IG1pZGRsZTsiPjJEPC90ZXh0Pjwvc3ZnPg==);
+     }
+
      #legend{
        background-image: url("https://gradecak.github.io/lsde04_data/colorbar.png");
        background-size: contain;
@@ -79,6 +89,54 @@
     </div>
 
     <script>
+
+
+     // Original ES6 Class— https://github.com/tobinbradley/mapbox-gl-pitch-toggle-control
+     class PitchToggle {
+       constructor({ bearing = -20, pitch = 70, minpitchzoom = null }) {
+         this._bearing = bearing;
+         this._pitch = pitch;
+         this._minpitchzoom = minpitchzoom;
+       }
+
+       onAdd(map) {
+         this._map = map;
+         let _this = this;
+
+         this._btn = document.createElement("button");
+         this._btn.className = "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d";
+         this._btn.type = "button";
+         this._btn["aria-label"] = "Toggle Pitch";
+         this._btn.onclick = function() {
+           if (map.getPitch() === 0) {
+             let options = { pitch: _this._pitch, bearing: _this._bearing };
+             if (_this._minpitchzoom && (map.getZoom() < _this._minpitchzoom)) {
+               options.zoom = _this._minpitchzoom;
+             }
+             map.easeTo(options);
+             _this._btn.className =
+               "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-2d";
+           } else {
+             map.easeTo({ pitch: 0, bearing: 0 });
+             _this._btn.className =
+               "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d";
+           }
+         };
+
+         this._container = document.createElement("div");
+         this._container.className = "mapboxgl-ctrl-group mapboxgl-ctrl";
+         this._container.appendChild(this._btn);
+
+         return this._container;
+       }
+
+       onRemove() {
+         this._container.parentNode.removeChild(this._container);
+         this._map = undefined;
+       }
+     }
+
+
      /* style: 'mapbox://styles/mapbox/streets-v9?optimize=true' */
      proj4.defs("EPSG:28992","+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs");
      proj4.defs("EPSG:4326","+proj=longlat +datum=WGS84 +no_defs");
@@ -88,7 +146,6 @@
        container: 'map',
        style: 'mapbox://styles/gradecam/cjnu44fv84g9o2rqklj6mdiik',
        center: [5.291266, 52.132633],
-       pitch: 40, // pitch in degrees
        zoom: 7
      });
 
@@ -98,6 +155,7 @@
 
        // Add zoom and rotation controls to the map.
        map.addControl(new mapboxgl.NavigationControl());
+       map.addControl(new PitchToggle({ bearing: 0, minpitchzoom: 9 }), "top-right");
 
        //                minx   miny     maxx    maxy
        /* var tile_cors = [12400, 306700, 277500, 615450] */
