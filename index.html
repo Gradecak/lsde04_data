@@ -109,6 +109,7 @@
          this._btn["aria-label"] = "Toggle Pitch";
          this._btn.onclick = function() {
            if (map.getPitch() === 0) {
+             _this.prevZoom = map.getZoom();
              let options = { pitch: _this._pitch, bearing: _this._bearing };
              if (_this._minpitchzoom && (map.getZoom() < _this._minpitchzoom)) {
                options.zoom = _this._minpitchzoom;
@@ -117,7 +118,13 @@
              _this._btn.className =
                "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-2d";
            } else {
-             map.easeTo({ pitch: 0, bearing: 0 });
+             if(_this.prevZoom){
+               map.easeTo({ pitch: 0, bearing: 0, zoom:_this.prevZoom});
+             }
+             else{
+               map.easeTo({ pitch: 0, bearing: 0 });
+             }
+
              _this._btn.className =
                "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d";
            }
